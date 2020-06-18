@@ -24,7 +24,7 @@ stages:
         buildContext: $(Build.Repository.LocalPath)
         repository: $(webRepository)
         dockerfile: '$(Build.SourcesDirectory)/Tailspin.SpaceGame.Web/Dockerfile'
-        containerRegistry: 'Container Registry Connection'
+        containerRegistry: 'sc-dev-spacegameacr'
         tags: |
           $(tag)
     - task: Docker@2
@@ -34,7 +34,7 @@ stages:
         buildContext: $(Build.Repository.LocalPath)
         repository: $(leaderboardRepository)
         dockerfile: '$(Build.SourcesDirectory)/Tailspin.SpaceGame.LeaderboardContainer/Dockerfile'
-        containerRegistry: 'Container Registry Connection'
+        containerRegistry: 'sc-dev-spacegameacr'
         tags: |
           $(tag)
           
@@ -63,14 +63,14 @@ stages:
             inputs:
               action: createSecret
               secretName: $(imagePullSecret)
-              dockerRegistryEndpoint: 'Container Registry Connection'
-              kubernetesServiceConnection: 'Kubernetes Cluster Connection'
+              dockerRegistryEndpoint: 'sc-dev-spacegameacr'
+              kubernetesServiceConnection: 'sc-dev-spacegame8ks'
               namespace: 'default'
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
             inputs:
               action: deploy
-              kubernetesServiceConnection: 'Kubernetes Cluster Connection'
+              kubernetesServiceConnection: 'sc-dev-spacegame8ks'
               namespace: 'default'
               manifests: |
                 $(Pipeline.Workspace)/manifests/deployment.yml
